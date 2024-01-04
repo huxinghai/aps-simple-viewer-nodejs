@@ -36,12 +36,12 @@ async function setupModelUpload(viewer) {
         let data = new FormData();
         data.append('model-file', file);
         if (file.name.endsWith('.zip')) { // When uploading a zip file, ask for the main design file in the archive
-            const entrypoint = window.prompt('Please enter the filename of the main design inside the archive.');
+            const entrypoint = window.prompt('不支持压缩文件，请上传CAD文件');
             data.append('model-zip-entrypoint', entrypoint);
         }
         upload.setAttribute('disabled', 'true');
         models.setAttribute('disabled', 'true');
-        showNotification(`Uploading model <em>${file.name}</em>. Do not reload the page.`);
+        showNotification(`文件上传中 <em>${file.name}</em>. 请勿刷新页面.`);
         try {
             const resp = await fetch('/api/models', { method: 'POST', body: data });
             if (!resp.ok) {
@@ -50,7 +50,7 @@ async function setupModelUpload(viewer) {
             const model = await resp.json();
             setupModelSelection(viewer, model.urn);
         } catch (err) {
-            alert(`Could not upload model ${file.name}. See the console for more details.`);
+            alert(`上传${file.name}失败. 请联系管理员`);
             console.error(err);
         } finally {
             clearNotification();
@@ -75,14 +75,14 @@ async function onModelSelected(viewer, urn) {
         const status = await resp.json();
         switch (status.status) {
             case 'n/a':
-                showNotification(`Model has not been translated.`);
+                showNotification(`文件格式解析失败.`);
                 break;
             case 'inprogress':
-                showNotification(`Model is being translated (${status.progress})...`);
+                showNotification(`文件正在读取中 (${status.progress})...`);
                 window.onModelSelectedTimeout = setTimeout(onModelSelected, 5000, viewer, urn);
                 break;
             case 'failed':
-                showNotification(`Translation failed. <ul>${status.messages.map(msg => `<li>${JSON.stringify(msg)}</li>`).join('')}</ul>`);
+                showNotification(`文件解析失败. <ul>${status.messages.map(msg => `<li>${JSON.stringify(msg)}</li>`).join('')}</ul>`);
                 break;
             default:
                 clearNotification();

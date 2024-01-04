@@ -9,7 +9,7 @@
     <meta name="description" content="便捷免费，无需下载安装。云端转换工具，隐私安全有保障，支持多格式在线转换，云库工具。">
     <link rel="icon" type="image/x-icon" href="https://cdn.autodesk.io/favicon.ico">
     <link rel="stylesheet" href="https://developer.api.autodesk.com/modelderivative/v2/viewers/7.*/style.css">
-    <link rel="stylesheet" href="/main.css">
+    <link rel="stylesheet" href="main.css">
     <title>CAD文件预览 - 云库工具</title>
 </head>
 
@@ -43,14 +43,14 @@
 </svg>
         </a>
         <span class="title"><a href="https://libkit.cn/cad-view" style="color: black; text-decoration: none;">CAD文件预览 - 云库工具</a></span>
-        <select name="models" id="models"></select>
+        <input type="text" name="models" id="models" readonly />
         <button id="upload" title="Upload New Model">上传CAD文件</button>
         <input style="display: none" type="file" id="input">
     </div>
     <div id="preview"></div>
     <div id="overlay"></div>
     <script src="https://developer.api.autodesk.com/modelderivative/v2/viewers/7.*/viewer3D.js"></script>
-    <script src="/main.js" type="module"></script>
+    <script src="main.js" type="module"></script>
 </body>
 
 </html>

@@ -1,20 +1,35 @@
 const express = require('express');
 const formidable = require('express-formidable');
-const { listObjects, uploadObject, translateObject, getManifest, urnify } = require('../services/aps.js');
+const { listObjectByName, uploadObject, translateObject, getManifest, urnify } = require('../services/aps.js');
 
 let router = express.Router();
 
-router.get('/api/models', async function (req, res, next) {
+// router.get('/api/models', async function (req, res, next) {
+//     try {
+//         const objects = await listObjects();
+//         res.json(objects.map(o => ({
+//             name: o.objectKey,
+//             urn: urnify(o.objectId)
+//         })));
+//     } catch (err) {
+//         next(err);
+//     }
+// });
+
+router.get('/api/models/:urn', async function (req, res, next) {
+    var decodedString = atob(req.params.urn)
+    var item = decodedString.split("/")
     try {
-        const objects = await listObjects();
-        res.json(objects.map(o => ({
-            name: o.objectKey,
-            urn: urnify(o.objectId)
-        })));
+        const obj = await listObjectByName(item[item.length-1]);
+        res.json({
+            name: obj.objectKey,
+            id: urnify(obj.objectId),
+        });
     } catch (err) {
         next(err);
     }
 });
+
 
 router.get('/api/models/:urn/status', async function (req, res, next) {
     try {

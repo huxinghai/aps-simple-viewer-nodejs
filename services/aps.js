@@ -45,6 +45,14 @@ service.listObjects = async () => {
     return objects;
 };
 
+service.listObjectByName = async (objectName) => {
+    await service.ensureBucketExists(APS_BUCKET);
+    let resp = await new APS.ObjectsApi().getObjectDetails(APS_BUCKET, objectName, null, null, await service.getInternalToken());
+    let objects = resp.body
+    return objects;
+};
+
+
 service.uploadObject = async (objectName, filePath) => {
     await service.ensureBucketExists(APS_BUCKET);
     const buffer = await fs.promises.readFile(filePath);

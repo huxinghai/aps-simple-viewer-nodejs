@@ -7,21 +7,20 @@ initViewer(document.getElementById('preview')).then(viewer => {
 });
 
 async function setupModelSelection(viewer, selectedUrn) {
+    if (selectedUrn == "") {
+        return
+    }
     const dropdown = document.getElementById('models');
-    dropdown.innerHTML = '';
+    dropdown.value = '';
     try {
-        const resp = await fetch('/api/models');
+        const resp = await fetch('/api/models/'+ selectedUrn);
         if (!resp.ok) {
             throw new Error(await resp.text());
         }
-        const models = await resp.json();
-        dropdown.innerHTML = models.map(model => `<option value=${model.urn} ${model.urn === selectedUrn ? 'selected' : ''}>${model.name}</option>`).join('\n');
-        dropdown.onchange = () => onModelSelected(viewer, dropdown.value);
-        if (dropdown.value) {
-            onModelSelected(viewer, dropdown.value);
-        }
+        const model = await resp.json();
+        dropdown.value = model.name
+        onModelSelected(viewer, model.id)
     } catch (err) {
-        alert('Could not list models. See the console for more details.');
         console.error(err);
     }
 }
@@ -90,7 +89,6 @@ async function onModelSelected(viewer, urn) {
                 break; 
         }
     } catch (err) {
-        alert('Could not load model. See the console for more details.');
         console.error(err);
     }
 }

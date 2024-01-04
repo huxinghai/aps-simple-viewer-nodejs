@@ -17,7 +17,8 @@ let router = express.Router();
 // });
 
 router.get('/api/models/:urn', async function (req, res, next) {
-    var decodedString = atob(req.params.urn)
+    // var decodedString = atob(req.params.urn)
+    var decodedString = Buffer.from(req.params.urn, 'base64').toString('utf-8');
     var item = decodedString.split("/")
     try {
         const obj = await listObjectByName(item[item.length-1]);

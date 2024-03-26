@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const formidable = require('express-formidable');
 const { listObjectByName, uploadObject, translateObject, getManifest, urnify } = require('../services/aps.js');
 
@@ -63,7 +64,16 @@ router.post('/api/models', formidable({ maxFileSize: Infinity }), async function
         return;
     }
     try {
-        const obj = await uploadObject(file.name, file.path);
+        const now = new Date();
+        const timestamp = now.getFullYear().toString() +
+                  (now.getMonth() + 1).toString().padStart(2, '0') + // 月份从0开始，所以+1
+                  now.getDate().toString().padStart(2, '0') +
+                  now.getHours().toString().padStart(2, '0') +
+                  now.getMinutes().toString().padStart(2, '0') +
+                  now.getSeconds().toString().padStart(2, '0');
+
+        const fileExt = path.extname(file.name);
+        const obj = await uploadObject(`${timestamp}${fileExt}`, file.path);
         await translateObject(urnify(obj.objectId), req.fields['model-zip-entrypoint']);
         res.json({
             name: obj.objectKey,

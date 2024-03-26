@@ -53,3 +53,17 @@ body, html {
     flex: 0 1 auto;
     min-width: 2em;
 }
+
+.file-name{
+    display: none;
+}
+
+@media screen and (max-width: 768px) {
+  .title {
+    display: none;
+  }
+
+  #upload{
+    font-size: 0.94rem;
+  }
+}

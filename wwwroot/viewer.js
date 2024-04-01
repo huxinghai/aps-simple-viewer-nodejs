@@ -16,7 +16,7 @@ async function getAccessToken(callback) {
 
 export function initViewer(container) {
     return new Promise(function (resolve, reject) {
-        Autodesk.Viewing.Initializer({ env: 'AutodeskProduction', getAccessToken }, function () {
+        Autodesk.Viewing.Initializer({ env: 'AutodeskProduction', getAccessToken, language: "zh"}, function () {
             const config = {
                 extensions: ['Autodesk.DocumentBrowser']
             };

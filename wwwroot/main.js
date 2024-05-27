@@ -19,7 +19,7 @@ async function setupModelSelection(viewer, selectedUrn) {
         }
         const model = await resp.json();
         dropdown.value = model.name
-        onModelSelected(viewer, model.id)
+        onModelSelected(viewer, model.id, 0)
     } catch (err) {
         console.error(err);
     }
@@ -60,10 +60,15 @@ async function setupModelUpload(viewer) {
     };
 }
 
-async function onModelSelected(viewer, urn) {
+async function onModelSelected(viewer, urn, counter) {
     if (window.onModelSelectedTimeout) {
         clearTimeout(window.onModelSelectedTimeout);
         delete window.onModelSelectedTimeout;
+    }
+    counter += 1
+    if counter > 6 {
+        window.location.reload();
+        return
     }
     window.location.hash = urn;
     try {
@@ -78,7 +83,7 @@ async function onModelSelected(viewer, urn) {
                 break;
             case 'inprogress':
                 showNotification(`文件正在读取中 (${status.progress})...`);
-                window.onModelSelectedTimeout = setTimeout(onModelSelected, 5000, viewer, urn);
+                window.onModelSelectedTimeout = setTimeout(onModelSelected, 5000, viewer, urn, counter);
                 break;
             case 'failed':
                 showNotification(`文件解析失败. <ul>${status.messages.map(msg => `<li>${JSON.stringify(msg)}</li>`).join('')}</ul>`);

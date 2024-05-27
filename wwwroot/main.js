@@ -66,7 +66,7 @@ async function onModelSelected(viewer, urn, counter) {
         delete window.onModelSelectedTimeout;
     }
     counter += 1
-    if counter > 6 {
+    if (counter > 6) {
         window.location.reload();
         return
     }
